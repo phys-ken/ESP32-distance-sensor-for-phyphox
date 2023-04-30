@@ -61,7 +61,7 @@ void setup() {
 
   experiment.setTitle("x-tグラフ");
   experiment.setCategory("距離センサ001");
-  experiment.setDescription("Plot the distance from a time-of-flight sensor over time.");
+  experiment.setDescription("Plot the distance from a ultra sonic sensor over time.");
 
   //View
   PhyphoxBleExperiment::View view;
