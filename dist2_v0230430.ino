@@ -59,9 +59,9 @@ void setup() {
   //Experiment
   PhyphoxBleExperiment experiment;
 
-  experiment.setTitle("x-tグラフ");
+  experiment.setTitle("距離センサ001");
   experiment.setCategory("距離センサ001");
-  experiment.setDescription("Plot the distance from a ultra sonic sensor over time.");
+  experiment.setDescription("Plot the distance from a time-of-flight sensor over time.");
 
   //View
   PhyphoxBleExperiment::View view;
@@ -91,15 +91,24 @@ void setup() {
   view.addElement(secondGraph);
   experiment.addView(view);               //Attach view to experiment
   PhyphoxBLE::addExperiment(experiment);  //Attach experiment to server
-
-
 }
+
+
 
 void loop() {
   //uncomment next line if using senseBox MCU or Arduino Nano 33 IoT
   //PhyphoxBLE::poll();
+  static float lastDist = 0.0;  // 前回の距離を保持するための変数
+  static unsigned long lastTime = 0; // 前回の時間を保持するための変数
+
   float dist = readHCSR04cm();
-  float v = dist / 2;
+  unsigned long currentTime = millis();
+  float deltaTime = (currentTime - lastTime) / 1000.0; // 単位を秒に変換
+
+  float v = (dist - lastDist) / deltaTime;
+  lastDist = dist;
+  lastTime = currentTime;
+
   PhyphoxBLE::write(dist, v);   //Send value to phyphox
   Serial.println(String(dist) + ",,,,," + String(v));
   delay(20);                          //Shortly pause before repeating
